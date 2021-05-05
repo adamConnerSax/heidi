@@ -32,9 +32,9 @@
 -- Generic encoding of algebraic datatypes, using @generics-sop@
 --
 -- Examples, inspiration and code borrowed from :
--- 
+--
 -- * @basic-sop@ - generic show function : https://hackage.haskell.org/package/basic-sop-0.2.0.2/docs/src/Generics-SOP-Show.html#gshow
--- 
+--
 -- * @tree-diff@ - single-typed ADT reconstruction : http://hackage.haskell.org/package/tree-diff-0.0.2/docs/src/Data.TreeDiff.Class.html#sopToExpr
 -----------------------------------------------------------------------------
 module Data.Generics.Encode.Internal (gflattenHM, gflattenGT,
@@ -45,9 +45,11 @@ module Data.Generics.Encode.Internal (gflattenHM, gflattenGT,
                                       -- ** 'MonadThrow' getters
                                      getIntM, getInt8M, getInt16M, getInt32M, getInt64M, getWordM, getWord8M, getWord16M, getWord32M, getWord64M, getBoolM, getFloatM, getDoubleM, getScientificM, getCharM, getStringM, getTextM, getOneHotM, TypeError(..),
                                      -- * TC (Type and Constructor annotation)
-                                     TC(..), tcTyN, tcTyCon, mkTyN, mkTyCon, 
+                                     TC(..), tcTyN, tcTyCon, mkTyN, mkTyCon,
                                      -- * Heidi (generic ADT encoding)
-                                     Heidi, toVal, Val(..), header, Header(..)) where
+                                     Heidi, toVal, Val(..), header, Header(..),
+                                     flattenHM, flattenGT, flatten
+                                     ) where
 
 import qualified GHC.Generics as G
 import Data.Int (Int8, Int16, Int32, Int64)
@@ -340,7 +342,7 @@ instance (Heidi a, Heidi b) => Heidi (a, b) where
   toVal (x, y) = VRec "(,)" $ HM.fromList $ zip labels [toVal x, toVal y]
 
 instance (Heidi a, Heidi b, Heidi c) => Heidi (a, b, c) where
-  toVal (x, y, z) = VRec "(,,)" $ HM.fromList $ zip labels [toVal x, toVal y, toVal z] 
+  toVal (x, y, z) = VRec "(,,)" $ HM.fromList $ zip labels [toVal x, toVal y, toVal z]
 
 
 
@@ -490,4 +492,3 @@ data R = MkR { r1 :: B2, r2 :: C , r3 :: B } deriving (Eq, Show, G.Generic, Heid
 
 -- newtype F = F (Int, Char) deriving (Eq, Show, G.Generic)
 -- instance Heidi F
-

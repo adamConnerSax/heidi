@@ -20,7 +20,7 @@ module Heidi (
   Frame
   -- ** Construction
   -- *** Encoding
-  , encode, Heidi, TC, VP
+  , encode, Heidi(toVal), TC, VP(..)
   -- *** Direct
   , frameFromList
   -- ** Access
@@ -83,6 +83,7 @@ module Heidi (
   , atPrefix, eachPrefixed, foldPrefixed
   -- ** Encode internals
   , tcTyN, tcTyCon, mkTyN, mkTyCon
+  , flattenHM, flattenGT, flatten
   -- , DataException(..)
   , OneHot
   )
@@ -92,11 +93,10 @@ import Control.Monad.Catch (MonadThrow(..))
 
 import Core.Data.Frame.List (Frame, frameFromList, head, take, drop, zipWith, numRows, filter, filterA, groupWith, scanl, scanr, toVector, fromVector)
 import Core.Data.Frame.Generic (encode)
-import Data.Generics.Encode.Internal (Heidi(..), VP(..), getIntM, getInt8M, getInt16M, getInt32M, getInt64M, getWordM, getWord8M, getWord16M, getWord32M, getWord64M, getBoolM, getFloatM, getDoubleM, getScientificM, getCharM, getStringM, getTextM, getOneHotM, TypeError(..), TC(..), tcTyN, tcTyCon, mkTyN, mkTyCon)
+import Data.Generics.Encode.Internal (Heidi(..), VP(..), getIntM, getInt8M, getInt16M, getInt32M, getInt64M, getWordM, getWord8M, getWord16M, getWord32M, getWord64M, getBoolM, getFloatM, getDoubleM, getScientificM, getCharM, getStringM, getTextM, getOneHotM, TypeError(..), TC(..), tcTyN, tcTyCon, mkTyN, mkTyCon, flattenHM, flattenGT, flatten)
 import Data.Generics.Encode.OneHot (OneHot)
-import Heidi.Data.Row.GenericTrie 
+import Heidi.Data.Row.GenericTrie
 import Heidi.Data.Frame.Algorithms.GenericTrie (innerJoin, leftOuterJoin, gatherWith, spreadWith, groupBy)
 
 -- import Control.Monad.Catch (MonadThrow(..))
 import Prelude hiding (filter, zipWith, lookup, foldl, foldr, scanl, scanr, head, take, drop)
-
