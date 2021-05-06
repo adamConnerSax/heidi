@@ -86,6 +86,8 @@ module Heidi (
   , flattenHM, flattenGT, flatten
   -- , DataException(..)
   , OneHot, onehotIx
+  -- ** re-exports
+  , TrieKey
   )
   where
 
@@ -97,6 +99,8 @@ import Data.Generics.Encode.Internal (Heidi(..), VP(..), getIntM, getInt8M, getI
 import Data.Generics.Encode.OneHot (OneHot, onehotIx)
 import Heidi.Data.Row.GenericTrie
 import Heidi.Data.Frame.Algorithms.GenericTrie (innerJoin, leftOuterJoin, gatherWith, spreadWith, groupBy)
+
+import Data.GenericTrie (TrieKey)
 
 -- import Control.Monad.Catch (MonadThrow(..))
 import Prelude hiding (filter, zipWith, lookup, foldl, foldr, scanl, scanr, head, take, drop)
