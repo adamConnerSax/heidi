@@ -1,6 +1,6 @@
 {-# language OverloadedStrings #-}
 {-# language FlexibleInstances #-}
-{-# language DeriveFunctor, DeriveFoldable, DeriveTraversable, GeneralizedNewtypeDeriving #-}
+{-# language DeriveFunctor, DeriveFoldable, DeriveTraversable, GeneralizedNewtypeDeriving, DerivingVia #-}
 {-# language ConstraintKinds #-}
 {-# OPTIONS_GHC -Wno-unused-top-binds #-}
 {-# OPTIONS_GHC -Wno-type-defaults #-}
@@ -25,13 +25,13 @@ module Core.Data.Frame.List (
   -- ** Access
   Core.Data.Frame.List.head,
   Core.Data.Frame.List.take,
-  Core.Data.Frame.List.drop, Core.Data.Frame.List.zipWith, numRows, 
-  -- ** Filtering 
-  Core.Data.Frame.List.filter, 
+  Core.Data.Frame.List.drop, Core.Data.Frame.List.zipWith, numRows,
+  -- ** Filtering
+  Core.Data.Frame.List.filter,
   -- *** 'D.Decode'-based filtering helpers
-  filterA, 
+  filterA,
   -- **
-  groupWith, 
+  groupWith,
   -- ** Scans (row-wise cumulative operations)
   Core.Data.Frame.List.scanl, Core.Data.Frame.List.scanr,
   -- ** Vector-related
@@ -47,7 +47,9 @@ import qualified Data.Vector as V
 
 -- | A 'Frame' is a list of rows.
 newtype Frame row = Frame {
-    tableRows :: [row] } deriving (Show, Functor, Foldable, Traversable)
+    tableRows :: [row] }
+  deriving stock (Show, Functor, Foldable, Traversable)
+  deriving (Semigroup, Monoid) via [row]
 
 head :: Frame row -> row
 head = Prelude.head . tableRows
@@ -94,7 +96,7 @@ scanl f z tt = Frame $ Prelude.scanl f z (tableRows tt)
 scanr :: (a -> b -> b) -> b -> Frame a -> Frame b
 scanr f z tt = Frame $ Prelude.scanr f z (tableRows tt)
 
--- | 'groupWith' takes row comparison function and a list and returns a list of lists such that the concatenation of the result is equal to the argument. Moreover, each sublist in the result contains only elements that satisfy the comparison. 
+-- | 'groupWith' takes row comparison function and a list and returns a list of lists such that the concatenation of the result is equal to the argument. Moreover, each sublist in the result contains only elements that satisfy the comparison.
 groupWith :: (row -> row -> Bool) -> Frame row -> [Frame row]
 groupWith f t = Frame <$> groupBy f (tableRows t)
 
