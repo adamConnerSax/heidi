@@ -49,6 +49,8 @@ module Heidi (
   -- ** Filtering
   , delete, filterWithKey, filterWithKeyPrefix, filterWithKeyAny
   , deleteMany
+  -- ** insertion
+  , insert
   -- ** Partitioning
   , partitionWithKey, partitionWithKeyPrefix
   -- -- ** Decoders
