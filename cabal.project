@@ -1,0 +1,5 @@
+packages: ./
+
+compiler: ghc
+
+allow-newer: base
